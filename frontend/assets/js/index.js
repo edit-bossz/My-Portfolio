@@ -141,7 +141,7 @@ document.onkeydown = function(e) {
 
 /* ===== SCROLL REVEAL ANIMATION ===== */
 const srtop = ScrollReveal({
-    origin: 'top, bottom',
+    origin: 'top',
     distance: '80px',
     duration: 1000,
     reset: true
