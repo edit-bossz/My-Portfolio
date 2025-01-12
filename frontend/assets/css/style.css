@@ -738,6 +738,28 @@ header {
     font-size: 2.2rem;
   }
 }
+/* Hero media queries for much smaller phones */
+@media (max-width: 320px) {
+  .home .btn {
+    margin: 3rem 0; /* Slightly less margin for smaller screens */
+    font-size: 1.4rem; /* Adjust button text size */
+    padding: 0.8rem 1.5rem; /* Adjust padding for smaller buttons */
+  }
+  .socials {
+    margin-top: 8rem; /* Less spacing for limited screen height */
+  }
+  .home .image img {
+    margin-top: -10rem; /* Adjust image positioning */
+    width: 90%; /* Scale image to fit better */
+  }
+  .home .content p {
+    font-size: 1.8rem; /* Reduce font size for better readability */
+    line-height: 1.4; /* Adjust line height for compact text */
+  }
+  .home .content p span {
+    font-size: 1.8rem; /* Match span text size with paragraph */
+  }
+}
 /* hero media queries ends*/
 /* hero section end */
 
