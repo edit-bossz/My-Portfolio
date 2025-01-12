@@ -1,20 +1,11 @@
+import os
 import subprocess
 
-# Path to the Node.js executable
-node_path = "node"
+# Change directory to where the server.js file is located
+os.chdir(r"C:\Users\manja\OneDrive - South Point Education Society\Riju Documents\Coding\HTML\My Portfolio\backend")
 
-# Path to the server.js file
-script_path = r"C:\Users\manja\OneDrive - South Point Education Society\Riju Documents\Coding\HTML\My Portfolio\backend\server.js"
+# Run the Node.js script
+subprocess.run(["node", "server.js"])
 
-try:
-    # Run the server.js script
-    result = subprocess.run([node_path, script_path], capture_output=True, text=True, check=True)
-
-    # Print the output from server.js
-    print("Output from server.js:")
-    print(result.stdout)
-
-except subprocess.CalledProcessError as e:
-    # Print the error if server.js fails
-    print("Error running server.js:")
-    print(e.stderr)
+# Pause (in case you need to observe the output)
+input("Press Enter to continue...")
