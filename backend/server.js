@@ -67,10 +67,17 @@ async function fetchEmails() {
     }
 
     connection.end();
+    console.log('Emails processed successfully.');
+    console.log('Stopping the script.');
+    process.exit(0); // Stop the script
   } catch (err) {
     console.error('Error processing emails:', err);
+    process.exit(1); // Exit with an error code
   }
 }
 
 // Run the fetchEmails function
-fetchEmails().catch((err) => console.error('Error:', err));
+fetchEmails().catch((err) => {
+  console.error('Error:', err);
+  process.exit(1); // Exit on any uncaught errors
+});
