@@ -1,28 +1,34 @@
 $(document).ready(function () {
-    // Toggle menu on click
-    $('#menu').click(function () {
-        $(this).toggleClass('fa-times');
-        $('.navbar').toggleClass('nav-toggle');
-    });
 
-    // Scroll spy and highlight active links
-    $(window).on('scroll load', function () {
-        $('#menu').removeClass('fa-times');
-        $('.navbar').removeClass('nav-toggle');
+  $('#menu').click(function () {
+      $(this).toggleClass('fa-times');
+      $('.navbar').toggleClass('nav-toggle');
+  });
 
-        $('section').each(function () {
-            let height = $(this).height();
-            let offset = $(this).offset().top - 200;
-            let top = $(window).scrollTop();
-            let id = $(this).attr('id');
+  $(window).on('scroll load', function () {
+      $('#menu').removeClass('fa-times');
+      $('.navbar').removeClass('nav-toggle');
 
-            if (top > offset && top < offset + height) {
-                $('.navbar ul li a').removeClass('active');
-                $('.navbar').find(`[href="#${id}"]`).addClass('active');
-            }
-        });
-    });
+      if (window.scrollY > 60) {
+          document.querySelector('#scroll-top').classList.add('active');
+      } else {
+          document.querySelector('#scroll-top').classList.remove('active');
+      }
 
+      // scroll spy
+      $('section').each(function () {
+          let height = $(this).height();
+          let offset = $(this).offset().top - 200;
+          let top = $(window).scrollTop();
+          let id = $(this).attr('id');
+
+          if (top > offset && top < offset + height) {
+              $('.navbar ul li a').removeClass('active');
+              $('.navbar').find(`[href="#${id}"]`).addClass('active');
+          }
+      });
+  });
+  
     // Smooth scrolling
     $('a[href*="#"]').on('click', function (e) {
         e.preventDefault();

@@ -1676,13 +1676,13 @@ form .button-area {
 #scroll-top {
   position: fixed;
   top: -140%;
-  right: 2rem;
+  left: 2rem;
   padding: 1rem 1.5rem;
   font-size: 2rem;
   background: #ffae00;
   color: rgb(13, 0, 44);
   border-radius: 50%;
-  transition: 1s linear;
+  transition: 0.3s linear;
   z-index: 1000;
 }
 #scroll-top.active {
