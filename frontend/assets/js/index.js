@@ -82,6 +82,10 @@ function calculateAge() {
 // Display the calculated age
 document.getElementById("age").textContent = calculateAge();
 
+//Set year in footer
+document.getElementById("year").textContent = new Date().getFullYear();
+
+
 // Hover effect on skills
 const skillBars = document.querySelectorAll('.skills .container .bar');
 // Add event listeners for hover effect
