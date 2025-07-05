@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2c3e50;
+            --background-color: #f0f2f5;
+            --font-color: #333;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --border-radius: 12px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 25px;
+            background-color: var(--background-color);
+            color: var(--font-color);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        header h1 {
+            color: var(--secondary-color);
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        header p {
+            margin: 8px 0 0;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 35px;
+        }
+        .chart-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .chart-container h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-family: 'Georgia', serif;
+        }
+        #loader {
+            text-align: center;
+            font-size: 1.5rem;
+            padding: 50px;
+            color: #666;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DATA SOURCE (Hidden) -->
+    <template id="data-source">
+        <div class="section nursery2" data-class="Nursery II">
+            <p class="info" data-attended="153" data-total="168"></p>
+        </div>
+        <div class="section transition" data-class="Transition">
+            <p class="info" data-attended="156" data-total="167"></p>
+        </div>
+        <div class="section class1" data-class="Class I">
+            <p class="info" data-attended="141" data-total="154"></p>
+        </div>
+        <div class="section class2" data-class="Class II">
+            <p class="info" data-attended="155" data-total="164"></p>
+        </div>
+        <div class="section class5" data-class="Class V">
+            <p class="info" data-attended="116" data-total="138"></p>
+        </div>
+        
+        <div class="section class6" data-class="Class VI">
+            <p class="info" data-attended="150" data-total="152"></p>
+            <table class="data-table">
+                <tbody>
+                    <tr data-subject="English"><td data-term1-marks>85</td><td data-term2-marks>90.3</td></tr>
+                    <tr data-subject="Bengali"><td data-term1-marks>90.5</td><td data-term2-marks>89.3</td></tr>
+                    <tr data-subject="Mathematics"><td data-term1-marks>97</td><td data-term2-marks>99.5</td></tr>
+                    <tr data-subject="Science"><td data-term1-marks>95.5</td><td data-term2-marks>97</td></tr>
+                    <tr data-subject="Social Science"><td data-term1-marks>99</td><td data-term2-marks>98</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section class7" data-class="Class VII">
+            <p class="info" data-attended="137" data-total="152"></p>
+             <table class="data-table">
+                <tbody>
+                    <tr data-subject="English"><td data-term1-marks>82.8</td><td data-term2-marks>83.5</td></tr>
+                    <tr data-subject="Bengali"><td data-term1-marks>85.3</td><td data-term2-marks>79.3</td></tr>
+                    <tr data-subject="Mathematics"><td data-term1-marks>97.3</td><td data-term2-marks>91</td></tr>
+                    <tr data-subject="Science"><td data-term1-marks>92.8</td><td data-term2-marks>93.5</td></tr>
+                    <tr data-subject="Social Science"><td data-term1-marks>97</td><td data-term2-marks>94.5</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section olympiad2022-23" data-year="2022-23">
+             <table class="olympiad-table">
+                <tbody>
+                    <tr data-exam="NSO" data-score="54" data-intl-rank="29"></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section olympiad2023-24" data-year="2023-24">
+            <table class="olympiad-table">
+                <tbody>
+                    <tr data-exam="NSO" data-score="49" data-intl-rank="76"></tr>
+                    <tr data-exam="IMO" data-score="55" data-intl-rank="64"></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section olympiad2024-25" data-year="2024-25">
+            <table class="olympiad-table">
+                <tbody>
+                    <tr data-exam="NSO" data-score="45" data-intl-rank="174"></tr>
+                    <tr data-exam="IMO" data-score="47" data-intl-rank="575"></tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+    
+    <!-- VISIBLE CONTENT OF THE PAGE -->
+    <div class="container">
+        <header>
+            <h1>Performance Dashboard</h1>
+            <p>An interactive analysis of academic and competitive exam data.</p>
+        </header>
+
+        <div id="loader">
+            <p>Analyzing Data...</p>
+        </div>
+
+        <div class="chart-grid" id="charts-wrapper" style="display: none;">
+            <div class="chart-container">
+                <h2>Subject Performance (Final Term)</h2>
+                <canvas id="subjectRadarChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Olympiad Score vs. Rank (Level 1)</h2>
+                <canvas id="olympiadScatterChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Term Marks Comparison (Class VI vs VII)</h2>
+                <canvas id="termMarksChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Attendance Percentage Over Years</h2>
+                <canvas id="attendanceChart"></canvas>
+            </div>
+             <div class="chart-container">
+                <h2>Olympiad Score Trend (Level 1)</h2>
+                <canvas id="olympiadScoreChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>Olympiad International Rank Trend (Level 1)</h2>
+                <canvas id="olympiadRankChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loader');
+            const chartsWrapper = document.getElementById('charts-wrapper');
+
+            try {
+                const dataTemplate = document.getElementById('data-source');
+                const dataDoc = dataTemplate.content;
+
+                const termMarksData = extractTermMarks(dataDoc);
+                const attendanceData = extractAttendance(dataDoc);
+                const olympiadData = extractOlympiadData(dataDoc);
+
+                createSubjectRadarChart(termMarksData);
+                createOlympiadScatterChart(olympiadData);
+                createTermMarksChart(termMarksData);
+                createAttendanceChart(attendanceData);
+                createOlympiadScoreChart(olympiadData);
+                createOlympiadRankChart(olympiadData);
+
+                loader.style.display = 'none';
+                chartsWrapper.style.display = 'grid';
+
+            } catch (error) {
+                loader.innerHTML = `<p style="color: red;">Error: Could not process data.</p><p><small>${error.message}</small></p>`;
+                console.error("Failed to parse data:", error);
+            }
+        });
+        
+        // --- Data Extraction Functions ---
+
+        function extractTermMarks(doc) {
+            const data = { labels: new Set(), classData: {} };
+            const classes = ['Class VI', 'Class VII'];
+
+            classes.forEach(cls => {
+                data.classData[cls] = { term1: {}, term2: {} };
+                const classSection = doc.querySelector(`.section[data-class="${cls}"]`);
+                if (classSection) {
+                    classSection.querySelectorAll('tr[data-subject]').forEach(row => {
+                        const subjectName = row.dataset.subject;
+                        data.labels.add(subjectName);
+                        data.classData[cls].term1[subjectName] = parseFloat(row.querySelector('[data-term1-marks]').textContent);
+                        data.classData[cls].term2[subjectName] = parseFloat(row.querySelector('[data-term2-marks]').textContent);
+                    });
+                }
+            });
+            data.labels = Array.from(data.labels);
+            return data;
+        }
+
+        function extractAttendance(doc) {
+            const data = { labels: [], percentages: [] };
+            doc.querySelectorAll('.section[data-class]').forEach(section => {
+                const info = section.querySelector('.info[data-attended]');
+                if (info) {
+                    const attended = parseFloat(info.dataset.attended);
+                    const total = parseFloat(info.dataset.total);
+                    if (total > 0) {
+                        data.labels.push(section.dataset.class);
+                        data.percentages.push(((attended / total) * 100).toFixed(2));
+                    }
+                }
+            });
+            return data;
+        }
+
+        function extractOlympiadData(doc) {
+            const data = { years: new Set(), exams: {} };
+            doc.querySelectorAll('.section[data-year]').forEach(section => {
+                const year = section.dataset.year;
+                data.years.add(year);
+                section.querySelectorAll('tr[data-exam]').forEach(row => {
+                    const exam = row.dataset.exam;
+                    if (!data.exams[exam]) {
+                        data.exams[exam] = {};
+                    }
+                    data.exams[exam][year] = {
+                        score: parseFloat(row.dataset.score),
+                        rank: parseInt(row.dataset.intlRank)
+                    };
+                });
+            });
+            data.years = Array.from(data.years).sort();
+            return data;
+        }
+
+        // --- Chart Creation Functions ---
+
+        function createSubjectRadarChart(data) {
+            const ctx = document.getElementById('subjectRadarChart').getContext('2d');
+            const datasets = [
+                {
+                    label: 'Class VI - Final Term',
+                    data: data.labels.map(label => data.classData['Class VI'].term2[label] || 0),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                },
+                {
+                    label: 'Class VII - Final Term',
+                    data: data.labels.map(label => data.classData['Class VII'].term2[label] || 0),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                }
+            ];
+            new Chart(ctx, { type: 'radar', data: { labels: data.labels, datasets }, options: { responsive: true, scales: { r: { beginAtZero: true, max: 100, pointLabels: { font: { size: 14 } } } } } });
+        }
+
+        function createOlympiadScatterChart(data) {
+            const ctx = document.getElementById('olympiadScatterChart').getContext('2d');
+            const scatterData = [];
+            for (const exam in data.exams) {
+                for (const year in data.exams[exam]) {
+                    scatterData.push({
+                        x: data.exams[exam][year].score,
+                        y: data.exams[exam][year].rank,
+                        label: `${exam} ${year}`
+                    });
+                }
+            }
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Score vs. Rank',
+                        data: scatterData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Score (out of 60)' }, min: 40 },
+                        y: { reverse: true, title: { display: true, text: 'International Rank (Lower is Better)' } }
+                    },
+                    plugins: { tooltip: { callbacks: { label: (c) => c.raw.label } } }
+                }
+            });
+        }
+        
+        function createTermMarksChart(data) {
+            const ctx = document.getElementById('termMarksChart').getContext('2d');
+            const datasets = [];
+            ['Term 1', 'Term 2'].forEach((term, termIndex) => {
+                ['Class VI', 'Class VII'].forEach(cls => {
+                    datasets.push({
+                        label: `${cls} - ${term}`,
+                        data: data.labels.map(subject => data.classData[cls][term.toLowerCase().replace(' ', '')][subject] || 0),
+                        backgroundColor: cls === 'Class VI' ? `rgba(255, 99, 132, ${termIndex === 0 ? 0.7 : 1})` : `rgba(54, 162, 235, ${termIndex === 0 ? 0.7 : 1})`,
+                    });
+                });
+            });
+            new Chart(ctx, { type: 'bar', data: { labels: data.labels, datasets }, options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Marks (out of 100)' } } } } });
+        }
+        
+        function createAttendanceChart(data) {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            new Chart(ctx, { type: 'line', data: { labels: data.labels, datasets: [{ label: 'Attendance %', data: data.percentages, fill: true, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgb(75, 192, 192)', tension: 0.1 }] }, options: { responsive: true, scales: { y: { min: 80, max: 100, title: { display: true, text: 'Percentage (%)' } } } } });
+        }
+
+        function createOlympiadScoreChart(data) {
+            const ctx = document.getElementById('olympiadScoreChart').getContext('2d');
+            const datasets = [];
+            for (const exam in data.exams) {
+                datasets.push({
+                    label: `${exam} Score`,
+                    data: data.years.map(year => data.exams[exam][year] ? data.exams[exam][year].score : null),
+                    backgroundColor: exam === 'NSO' ? 'rgba(255, 159, 64, 0.7)' : 'rgba(153, 102, 255, 0.7)',
+                    spanGaps: true // Connects lines over null data points
+                });
+            }
+            new Chart(ctx, { type: 'bar', data: { labels: data.years, datasets }, options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, max: 60, title: { display: true, text: 'Score (out of 60)' } } } } });
+        }
+
+        function createOlympiadRankChart(data) {
+            const ctx = document.getElementById('olympiadRankChart').getContext('2d');
+            const datasets = [];
+            for (const exam in data.exams) {
+                datasets.push({
+                    label: `${exam} Int'l Rank`,
+                    data: data.years.map(year => data.exams[exam][year] ? data.exams[exam][year].rank : null),
+                    borderColor: exam === 'NSO' ? 'rgb(255, 159, 64)' : 'rgb(153, 102, 255)',
+                    spanGaps: true,
+                    tension: 0.1
+                });
+            }
+            new Chart(ctx, { type: 'line', data: { labels: data.years, datasets }, options: { responsive: true, scales: { y: { reverse: true, title: { display: true, text: 'International Rank (Lower is Better)' } } }, plugins: { tooltip: { callbacks: { label: (c) => `${c.dataset.label}: Rank ${c.parsed.y}` } } } } });
+        }
+
+    </script>
+
+</body>
+</html>
